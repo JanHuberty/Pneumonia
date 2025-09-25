@@ -1,0 +1,29 @@
+name: Auto format (Black+isort)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "**/*.py"
+
+permissions:
+  contents: write
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install black isort
+      - run: |
+          isort .
+          black .
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-format with black & isort"
