@@ -1,7 +1,8 @@
 [tool.black]
 line-length = 100
 target-version = ["py311"]
-extend-exclude = ["checkpoints", "data", "logs"]
+extend-exclude = ["checkpoints", "data", "logs", "notebooks", "docs", "code.py"]
+
 
 [tool.isort]
 profile = "black"
