@@ -1,0 +1,25 @@
+name: Auto format
+on:
+  workflow_dispatch:      # lets you run it by hand
+  push:
+    paths:
+      - "**/*.py"
+      - "pyproject.toml"
+      - ".flake8"
+
+jobs:
+  format:
+    permissions:
+      contents: write     # allow the workflow to push a commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install black isort
+      - run: black .
+      - run: isort .
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-format with Black & isort"
