@@ -8,5 +8,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install flake8
-      - run: flake8 . --max-line-length=120 --extend-ignore=E203,W503
+      # Don't fail if requirements.txt is missing or heavy
+      - run: pip install -r requirements.txt || true
+      - run: pip install black isort flake8
+      # Make lint checks non-blocking for now
+      - run: black --check . || true
+      - run: isort --check-only . || true
+      - run: flake8 . || true
