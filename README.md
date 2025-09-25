@@ -6,7 +6,7 @@ ResNet-based classifier trained on chest X-rays.
 ## Overview
 - Transfer learning (frozen → fine-tune)
 - Metrics: accuracy, ROC/AUC, confusion matrix
-- Reproducible seeds; checkpoints saved
+- Reproducible seeds, checkpoints saved
 
 ## Setup
 ```bash
