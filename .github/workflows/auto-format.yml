@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   fmt:
-    # avoid recursive runs from the bot's own commit
+    # avoid re-running on the bot's own commit
     if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     steps:
@@ -30,19 +30,21 @@ jobs:
       - name: Install formatters
         run: pip install black==24.8.0 isort==5.13.2
 
-      - name: Run formatters
-        run: |
-          isort .
-          black .
+      # Let the job continue even if a file can't be parsed
+      - name: Run isort
+        run: isort .
+        continue-on-error: true
+      - name: Run black
+        run: black .
+        continue-on-error: true
 
-      - name: Commit & push if changed
+      - name: Commit & push if changed (rebase-safe)
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git status --porcelain | grep .; then
             git add -A
             git commit -m "style: auto-format with black & isort"
-            # rebase in case main moved
             git pull --rebase origin "${{ github.ref_name }}"
             git push origin HEAD:"${{ github.ref_name }}"
           else
